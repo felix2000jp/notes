@@ -1,12 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /server-dotnet
+WORKDIR /app
 COPY . . 
 RUN dotnet restore
 RUN dotnet publish -c release -o out
 
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS final
-WORKDIR /server-dotnet
-COPY --from=build /server-dotnet/out .
+WORKDIR /app
+COPY --from=build /app/out .
 
 ENTRYPOINT [ "dotnet", "Api.dll" ]
