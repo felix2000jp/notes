@@ -24,7 +24,7 @@ public class NoteServiceTests
 
 
     [Fact]
-    public async Task Select_OnSuccess_ReturnsNote()
+    public async Task Get_OnSuccess_ReturnsNote()
     {
         // Arrange
         var note = NoteFixtures.TestNotes[0];
@@ -43,7 +43,7 @@ public class NoteServiceTests
     }
 
     [Fact]
-    public async Task Select_OnFailure_ReturnsIError()
+    public async Task Get_OnFailure_ReturnsIError()
     {
         // Arrange
         var note = NoteFixtures.TestNotes[0];
@@ -60,7 +60,7 @@ public class NoteServiceTests
     }
 
     [Fact]
-    public async Task Create_OnSuccess_ReturnsNote()
+    public async Task Add_OnSuccess_ReturnsNote()
     {
         // Arrange
         var note = NoteFixtures.TestNotes[0];
@@ -143,5 +143,22 @@ public class NoteServiceTests
         // Assert
         result.IsT1.Should().BeTrue();
         result.Value.Should().BeEquivalentTo(error);
+    }
+
+    [Fact]
+    public async Task GetAll_OnSuccess_ReturnsIEnumerableOfNotes()
+    {
+        // Arrange
+        var notes = NoteFixtures.TestNotes;
+
+        _dataContext.AddRange(notes);
+        await _dataContext.SaveChangesAsync();
+
+        // Act
+        var result = await _noteService.GetAll();
+
+        // Assert
+        result.IsT0.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(notes);
     }
 }

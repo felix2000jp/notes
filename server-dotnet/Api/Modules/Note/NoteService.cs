@@ -63,8 +63,8 @@ public class NoteService : INoteService
         return noteToUpdate;
     }
 
-    public Task<OneOf<IEnumerable<Note>, IError>> GetAll()
+    public async Task<OneOf<IEnumerable<Note>, IError>> GetAll()
     {
-        throw new NotImplementedException();
+        return await _dataContext.Notes.ToListAsync();
     }
 }
