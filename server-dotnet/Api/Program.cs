@@ -1,6 +1,10 @@
 using Api.Config;
 using Api.Data;
 using Api.Extensions;
+using Api.Modules.Note;
+using Api.Modules.Note.Dto;
+using Api.Modules.Note.Validation;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.UseMySql(databaseConfig.TestSource, ServerVersion.AutoDetect(databaseConfig.TestSource));
     });
+    
+    builder.Services.AddScoped<IValidator<AddNoteDto>, AddNoteDtoValidator>();
+    builder.Services.AddScoped<IValidator<UpdateNoteDto>, UpdateNoteDtoValidator>();
+    builder.Services.AddScoped<INoteService, NoteService>();
 
     builder.Services.AddControllers();
 }
