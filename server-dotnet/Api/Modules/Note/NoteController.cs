@@ -66,4 +66,52 @@ public class NoteController : ControllerBase
                 return Problem(title: error.Title, detail: error.Detail, statusCode: error.StatusCode);
             });
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Remove(Guid id)
+    {
+        // Service
+        var result = await _noteService.Remove(id);
+
+        // Response
+        return result.Match(
+            value =>
+            {
+                _logger.Log(LogLevel.Information, "Success deleting note with id: {Id}", id);
+                return Ok(value.ToDto());
+            },
+            error =>
+            {
+                _logger.Log(LogLevel.Error, "Failure deleting note with id: {Id}", id);
+                return Problem(title: error.Title, detail: error.Detail, statusCode: error.StatusCode);
+            });
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(IValidator<UpdateNoteDto> validator, UpdateNoteDto dto, Guid id)
+    {
+        // Validation
+        var validationResult = await validator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            return ValidationProblem(validationResult.ToModelStateDictionary());
+        }
+
+        // Service
+        var note = Note.From(dto, id);
+        var result = await _noteService.Update(note);
+
+        // Response
+        return result.Match(
+            value =>
+            {
+                _logger.Log(LogLevel.Information, "Success updating note: {Note}", dto);
+                return Ok(value.ToDto());
+            },
+            error =>
+            {
+                _logger.Log(LogLevel.Error, "Failure updating note: {Note}", dto);
+                return Problem(title: error.Title, detail: error.Detail, statusCode: error.StatusCode);
+            });
+    }
 }

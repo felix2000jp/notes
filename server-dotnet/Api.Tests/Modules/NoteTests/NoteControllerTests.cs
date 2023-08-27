@@ -82,4 +82,82 @@ public class NoteControllerTests
         result.Should().BeOfType<CreatedResult>();
         result.Value.Should().BeEquivalentTo(note.ToDto());
     }
+    
+    [Fact]
+    public async Task Remove_OnSuccess_ReturnsOk()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+
+        var id = note.Id;
+
+        _noteService.Remove(Arg.Any<Guid>()).Returns(note);
+
+        // Act
+        var result = (OkObjectResult)await _notesController.Remove(id);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+        result.Value.Should().BeEquivalentTo(note.ToDto());
+    }
+
+    [Fact]
+    public async Task Remove_OnFailure_ReturnsProblem()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+        var error = new NotFoundError("Note not found", $"Note with id: {note.Id} could not be found");
+
+        var id = note.Id;
+
+        _noteService.Remove(Arg.Any<Guid>()).Returns(error);
+
+        // Act
+        var result = (ObjectResult)await _notesController.Remove(id);
+
+        // Assert
+        result.Should().BeOfType<ObjectResult>();
+        result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+    }
+    
+    [Fact]
+    public async Task Update_OnSuccess_ReturnsOk()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+
+        var validator = new UpdateNoteDtoValidator();
+        var dto = new UpdateNoteDto(note.Name, note.Text);
+        var id = note.Id;
+
+        _noteService.Update(Arg.Any<Note>()).Returns(note);
+
+        // Act
+        var result = (OkObjectResult)await _notesController.Update(validator, dto, id);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+        result.Value.Should().BeEquivalentTo(note.ToDto());
+    }
+
+    [Fact]
+    public async Task Update_OnFailure_ReturnsProblem()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+        var error = new NotFoundError("Note not found", $"Note with id: {note.Id} could not be found");
+
+        var validator = new UpdateNoteDtoValidator();
+        var dto = new UpdateNoteDto(note.Name, note.Text);
+        var id = note.Id;
+
+        _noteService.Update(Arg.Any<Note>()).Returns(error);
+
+        // Act
+        var result = (ObjectResult)await _notesController.Update(validator, dto, id);
+
+        // Assert
+        result.Should().BeOfType<ObjectResult>();
+        result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+    }
 }
