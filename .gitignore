@@ -1,0 +1,11 @@
+.DS_Store
+.vscode
+.idea
+
+server-dotnet/**/*.user
+server-dotnet/**/appsettings.json
+server-dotnet/**/bin
+server-dotnet/**/obj
+
+client/**/node_modules
+client/**/dist
