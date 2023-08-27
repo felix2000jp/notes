@@ -33,9 +33,7 @@ var app = builder.Build();
     {
         options.WithOrigins(securityConfig.TestHosts).AllowCredentials().AllowAnyHeader().AllowAnyMethod();
     });
-
     
-    app.UseHttpsRedirection();
     app.MapControllers();
     app.Run();
 }
