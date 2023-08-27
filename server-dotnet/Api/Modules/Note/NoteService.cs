@@ -34,9 +34,18 @@ public class NoteService : INoteService
         return note;
     }
 
-    public Task<OneOf<Note, IError>> Remove(Guid id)
+    public async Task<OneOf<Note, IError>> Remove(Guid id)
     {
-        throw new NotImplementedException();
+        var noteToDelete = await _dataContext.Notes.SingleOrDefaultAsync(n => n.Id == id);
+        if (noteToDelete is null)
+        {
+            return new NotFoundError("Note not found", $"Note with id: {id} could not be found");
+        }
+
+        _dataContext.Notes.Remove(noteToDelete);
+        await _dataContext.SaveChangesAsync();
+
+        return noteToDelete;
     }
 
     public Task<OneOf<Note, IError>> Update(Note note)

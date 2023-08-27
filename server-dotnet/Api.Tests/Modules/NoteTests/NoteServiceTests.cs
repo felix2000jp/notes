@@ -73,4 +73,41 @@ public class NoteServiceTests
         result.Value.Should().BeEquivalentTo(note);
         _dataContext.Notes.Should().ContainEquivalentOf(note);
     }
+    
+    [Fact]
+    public async Task Remove_OnSuccess_ReturnsNote()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+
+        var id = note.Id;
+
+        _dataContext.Add(note);
+        await _dataContext.SaveChangesAsync();
+
+        // Act
+        var result = await _noteService.Remove(id);
+
+        // Assert
+        result.IsT0.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(note);
+        _dataContext.Notes.Should().NotContainEquivalentOf(note);
+    }
+
+    [Fact]
+    public async Task Remove_OnFailure_ReturnsIError()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+        var error = new NotFoundError("Note not found", $"Note with id: {note.Id} could not be found");
+
+        var id = note.Id;
+
+        // Act
+        var result = await _noteService.Remove(id);
+
+        // Assert
+        result.IsT1.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(error);
+    }
 }
