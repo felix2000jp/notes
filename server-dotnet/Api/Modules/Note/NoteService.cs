@@ -26,9 +26,12 @@ public class NoteService : INoteService
         return noteToSearch;
     }
 
-    public Task<OneOf<Note, IError>> Add(Note note)
+    public async Task<OneOf<Note, IError>> Add(Note note)
     {
-        throw new NotImplementedException();
+        _dataContext.Notes.Add(note);
+        await _dataContext.SaveChangesAsync();
+
+        return note;
     }
 
     public Task<OneOf<Note, IError>> Remove(Guid id)

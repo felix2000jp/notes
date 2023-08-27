@@ -58,4 +58,19 @@ public class NoteServiceTests
         result.IsT1.Should().BeTrue();
         result.Value.Should().BeEquivalentTo(error);
     }
+    
+    [Fact]
+    public async Task Create_OnSuccess_ReturnsNote()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+
+        // Act
+        var result = await _noteService.Add(note);
+
+        // Assert
+        result.IsT0.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(note);
+        _dataContext.Notes.Should().ContainEquivalentOf(note);
+    }
 }
