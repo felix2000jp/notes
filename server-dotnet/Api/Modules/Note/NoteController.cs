@@ -114,4 +114,24 @@ public class NoteController : ControllerBase
                 return Problem(title: error.Title, detail: error.Detail, statusCode: error.StatusCode);
             });
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        // Service
+        var result = await _noteService.GetAll();
+
+        // Response
+        return result.Match(
+            value =>
+            {
+                _logger.Log(LogLevel.Information, "Success selecting all notes");
+                return Ok(value.Select(x => x.ToDto()));
+            },
+            error =>
+            {
+                _logger.Log(LogLevel.Error, "Success selecting all notes");
+                return Problem(title: error.Title, detail: error.Detail, statusCode: error.StatusCode);
+            });
+    }
 }

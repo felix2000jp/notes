@@ -160,4 +160,20 @@ public class NoteControllerTests
         result.Should().BeOfType<ObjectResult>();
         result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
     }
+    
+    [Fact]
+    public async Task GetAll_OnSuccess_ReturnsOk()
+    {
+        // Arrange
+        var notes = NoteFixtures.TestNotes;
+
+        _noteService.GetAll().Returns(notes);
+
+        // Act
+        var result = (OkObjectResult)await _notesController.GetAll();
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+        result.Value.Should().BeEquivalentTo(notes.Select(n => n.ToDto()));
+    }
 }
