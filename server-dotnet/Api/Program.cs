@@ -8,9 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
     var databaseConfig = builder.Configuration.GetConfig<DatabaseConfig>();
 
 
-    builder.Services.AddControllers();
+    builder.Services.AddDbContext<DataContext>(options =>
+    {
+        options.UseMySql(databaseConfig.TestSource, ServerVersion.AutoDetect(databaseConfig.TestSource));
+    });
 
-    builder.Services.AddDbContext<DataContext>(options => options.UseMySql(databaseConfig.TestSource, ServerVersion.AutoDetect(databaseConfig.TestSource)));
+    builder.Services.AddControllers();
 }
 
 var app = builder.Build();

@@ -5,17 +5,17 @@ namespace Api.Data;
 
 public class DataContext : DbContext
 {
-    public DbSet<Note> Notes { get; set; }
+    private readonly string _connectionString; 
 
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
+    public DataContext(DbContextOptions<DataContext> options, string connectionString) : base(options)
     {
+        _connectionString = connectionString;
     }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        base.OnConfiguring(builder);
-        if (builder.IsConfigured) return;
+        builder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString));
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -27,4 +27,6 @@ public class DataContext : DbContext
             entity.Property(x => x.Text).HasMaxLength(300).IsRequired();
         });
     }
+    
+    public DbSet<Note> Notes { get; set; }
 }
