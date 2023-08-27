@@ -1,4 +1,4 @@
-namespace API.Errors.Impl;
+namespace API.Errors.Implementation;
 
 public class ConflictError : IError
 {
