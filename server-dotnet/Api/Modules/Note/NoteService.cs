@@ -1,13 +1,29 @@
+using Api.Data;
 using Api.Errors;
+using Microsoft.EntityFrameworkCore;
 using OneOf;
 
-namespace Api.Modules.Note.Concrete;
+namespace Api.Modules.Note;
 
 public class NoteService : INoteService
 {
-    public Task<OneOf<Note, IError>> Get(Guid id)
+    private readonly DataContext _dataContext;
+
+    public NoteService(DataContext dataContext)
     {
-        throw new NotImplementedException();
+        _dataContext = dataContext;
+    }
+
+    
+    public async Task<OneOf<Note, IError>> Get(Guid id)
+    {
+        var noteToSearch = await _dataContext.Notes.SingleOrDefaultAsync(n => n.Id == id);
+        if (noteToSearch is null)
+        {
+            return new NotFoundError("Note not found", $"Note with id: {id} could not be found");
+        }
+
+        return noteToSearch;
     }
 
     public Task<OneOf<Note, IError>> Add(Note note)
