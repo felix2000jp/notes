@@ -7,9 +7,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NoteDto, UpdateNoteDto, noteSchemas } from "~/schemas/note-schemas";
 import { noteServices } from "~/services/note-services";
 
-type UpdateNoteComponent = { note: NoteDto };
+type UpdateNoteModal = { note: NoteDto };
 
-export const UpdateNoteModal = ({ note }: UpdateNoteComponent) => {
+export const UpdateNoteModal = ({ note }: UpdateNoteModal) => {
   const queryClient = useQueryClient();
   const [opened, { open, close }] = useDisclosure(false);
 
