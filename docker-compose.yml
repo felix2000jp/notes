@@ -1,10 +1,24 @@
 services:
   db:
     image: mysql
-    container_name: notes-db
+    container_name: db
     restart: always
     environment:
       - MYSQL_DATABASE=notes
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - "3306:3306"
+  server-dotnet:
+    image: notes/server-dotnet
+    container_name: server-dotnet
+    build:
+      context: ./server-dotnet
+      dockerfile: Dockerfile
+    environment:
+      - Database__TestSource=Server=db; User ID=root; Password=root; Database=notes
+      - Security__TestHosts=http://localhost:5070
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
