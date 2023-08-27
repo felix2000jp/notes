@@ -24,4 +24,10 @@ public interface INoteService
     /// Updates an existing note.
     /// </summary>
     Task<OneOf<Note, IError>> Update(Note note);
+    
+    
+    /// <summary>
+    /// Gets all notes.
+    /// </summary>
+    Task<OneOf<IEnumerable<Note>, IError>> GetAll();
 }
