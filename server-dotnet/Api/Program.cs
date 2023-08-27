@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.UseMySql(databaseConfig.TestSource, ServerVersion.AutoDetect(databaseConfig.TestSource));
     });
-    
+
     builder.Services.AddScoped<IValidator<AddNoteDto>, AddNoteDtoValidator>();
     builder.Services.AddScoped<IValidator<UpdateNoteDto>, UpdateNoteDtoValidator>();
     builder.Services.AddScoped<INoteService, NoteService>();
@@ -28,13 +28,14 @@ var app = builder.Build();
 {
     var securityConfig = builder.Configuration.GetConfig<SecurityConfig>();
 
+    
     app.MigrateDatabase();
 
     app.UseCors(options =>
     {
         options.WithOrigins(securityConfig.TestHosts).AllowCredentials().AllowAnyHeader().AllowAnyMethod();
     });
-    
+
     app.MapControllers();
     app.Run();
 }

@@ -9,8 +9,12 @@ public static class DatabaseExtensions
     {
         using var scope = webApp.Services.CreateScope();
         using var appContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-        appContext.Database.Migrate();
-
+        
+        if (appContext.Database.GetPendingMigrations().Any())
+        {
+            appContext.Database.Migrate();
+        }
+        
         return webApp;
     }
 }
