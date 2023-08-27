@@ -14,4 +14,25 @@ public class NoteController : ControllerBase
         _noteService = noteService;
         _logger = logger;
     }
+
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        // Service
+        var result = await _noteService.Get(id);
+
+        // Response
+        return result.Match(
+            value =>
+            {
+                _logger.Log(LogLevel.Information, "Success selecting note with id: {Id}", id);
+                return Ok(value.ToDto());
+            },
+            error =>
+            {
+                _logger.Log(LogLevel.Error, "Failure selecting note with id: {Id}", id);
+                return Problem(title: error.Title, detail: error.Detail, statusCode: error.StatusCode);
+            });
+    }
 }
