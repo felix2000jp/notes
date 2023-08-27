@@ -14,7 +14,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Modules\Note\Implementation\" />
       <Folder Include="Modules\Note\Validation\" />
     </ItemGroup>
 
