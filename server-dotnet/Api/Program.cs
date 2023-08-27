@@ -18,6 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    var securityConfig = builder.Configuration.GetConfig<SecurityConfig>();
+
+
+    app.UseCors(options =>
+    {
+        options.WithOrigins(securityConfig.TestHosts).AllowCredentials().AllowAnyHeader().AllowAnyMethod();
+    });
+
+    
     app.UseHttpsRedirection();
     app.MapControllers();
     app.Run();
