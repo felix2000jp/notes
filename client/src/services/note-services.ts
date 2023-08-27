@@ -1,4 +1,4 @@
-import { CreateNoteDto, NoteDto, UpdateNoteDto } from "~/schemas/note.schemas";
+import { CreateNoteDto, NoteDto, UpdateNoteDto } from "~/schemas/note-schemas";
 import { httpClient } from "~/utils/http-client";
 
 const get = async (args: { id: string }) => {
