@@ -5,7 +5,7 @@ import { UpdateNoteModal } from "./update-note-modal";
 
 type NoteCard = { note: NoteDto };
 
-export const Note = ({ note }: NoteCard) => {
+export const NoteCard = ({ note }: NoteCard) => {
   return (
     <Card shadow="lg" padding="lg" radius="lg" withBorder>
       <Text size="lg" weight={600} color="dark">

@@ -22,7 +22,7 @@ const update = async (args: { body: UpdateNoteDto; id: string }) => {
 };
 
 const getAll = async () => {
-  const result = await httpClient.get<NoteDto>("notes");
+  const result = await httpClient.get<NoteDto[]>("notes");
   return result.data;
 };
 
