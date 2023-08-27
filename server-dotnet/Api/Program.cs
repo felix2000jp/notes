@@ -28,6 +28,7 @@ var app = builder.Build();
 {
     var securityConfig = builder.Configuration.GetConfig<SecurityConfig>();
 
+    app.MigrateDatabase();
 
     app.UseCors(options =>
     {
