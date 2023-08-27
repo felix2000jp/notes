@@ -1,4 +1,4 @@
-import { CreateNoteDto, NoteDto, UpdateNoteDto } from "~/schemas/note-schemas";
+import { AddNoteDto, NoteDto, UpdateNoteDto } from "~/schemas/note-schemas";
 import { httpClient } from "~/utils/http-client";
 
 const get = async (args: { id: string }) => {
@@ -6,7 +6,7 @@ const get = async (args: { id: string }) => {
   return result.data;
 };
 
-const add = async (args: { body: CreateNoteDto }) => {
+const add = async (args: { body: AddNoteDto }) => {
   const result = await httpClient.post<NoteDto>("notes", args.body);
   return result.data;
 };
