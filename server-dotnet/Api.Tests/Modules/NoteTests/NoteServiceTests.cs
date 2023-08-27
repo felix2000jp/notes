@@ -58,7 +58,7 @@ public class NoteServiceTests
         result.IsT1.Should().BeTrue();
         result.Value.Should().BeEquivalentTo(error);
     }
-    
+
     [Fact]
     public async Task Create_OnSuccess_ReturnsNote()
     {
@@ -73,7 +73,7 @@ public class NoteServiceTests
         result.Value.Should().BeEquivalentTo(note);
         _dataContext.Notes.Should().ContainEquivalentOf(note);
     }
-    
+
     [Fact]
     public async Task Remove_OnSuccess_ReturnsNote()
     {
@@ -105,6 +105,40 @@ public class NoteServiceTests
 
         // Act
         var result = await _noteService.Remove(id);
+
+        // Assert
+        result.IsT1.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(error);
+    }
+
+    [Fact]
+    public async Task Update_OnSuccess_ReturnsNote()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+        var noteToUpdate = new Note(note.Id, "Name to be updated", "Text to be updated");
+
+        _dataContext.Add(noteToUpdate);
+        await _dataContext.SaveChangesAsync();
+
+        // Act
+        var result = await _noteService.Update(note);
+
+        // Assert
+        result.IsT0.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(note);
+        _dataContext.Notes.Should().ContainEquivalentOf(note);
+    }
+
+    [Fact]
+    public async Task Update_OnFailure_ReturnsIError()
+    {
+        // Arrange
+        var note = NoteFixtures.TestNotes[0];
+        var error = new NotFoundError("Note not found", $"Note with id: {note.Id} could not be found");
+
+        // Act
+        var result = await _noteService.Update(note);
 
         // Assert
         result.IsT1.Should().BeTrue();

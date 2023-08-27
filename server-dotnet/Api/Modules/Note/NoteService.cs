@@ -48,9 +48,19 @@ public class NoteService : INoteService
         return noteToDelete;
     }
 
-    public Task<OneOf<Note, IError>> Update(Note note)
+    public async Task<OneOf<Note, IError>> Update(Note note)
     {
-        throw new NotImplementedException();
+        var noteToUpdate = await _dataContext.Notes.SingleOrDefaultAsync(n => n.Id == note.Id);
+        if (noteToUpdate is null)
+        {
+            return new NotFoundError("Note not found", $"Note with id: {note.Id} could not be found");
+        }
+
+        noteToUpdate.Name = note.Name;
+        noteToUpdate.Text = note.Text;
+        await _dataContext.SaveChangesAsync();
+
+        return noteToUpdate;
     }
 
     public Task<OneOf<IEnumerable<Note>, IError>> GetAll()
