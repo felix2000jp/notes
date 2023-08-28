@@ -2,10 +2,10 @@
 .vscode
 .idea
 
-server-dotnet/**/*.user
-server-dotnet/**/appsettings.json
-server-dotnet/**/bin
-server-dotnet/**/obj
+*.user
+appsettings.json
+bin
+obj
 
-client/**/node_modules
-client/**/dist
+node_modules
+dist
