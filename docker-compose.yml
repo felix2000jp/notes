@@ -14,7 +14,6 @@ services:
       - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
       timeout: 20s
       retries: 10
     networks:
@@ -30,10 +29,23 @@ services:
       - Database__TestSource=Server=db; User ID=root; Password=root; Database=notes
       - Security__TestHosts=http://localhost:5070
       - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "8080:80"
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8080:80"
     networks:
       - dev
+  client: 
+    image: notes/client
+    container_name: client
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "5070:80"
+    depends_on:
+      - server-dotnet
